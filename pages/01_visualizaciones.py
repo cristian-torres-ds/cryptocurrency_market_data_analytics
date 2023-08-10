@@ -8,7 +8,7 @@ if st.checkbox('Mostrar texto'):
 
 fields = ['country', 'points', 'price', 'variety']
 
-df = pd.read_csv('wine_reviews.csv', usecols=fields)
+df = pd.read_csv('vinos.csv', usecols=fields)
 df.dropna(inplace=True)
 
 if st.checkbox('Mostrar dataframe'):
