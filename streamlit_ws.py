@@ -1,5 +1,5 @@
 import streamlit as st
-# streamlit run .\main.py
+# streamlit run .\streamlit_ws.py
 
 st.title('Probando Streamlit')
 
