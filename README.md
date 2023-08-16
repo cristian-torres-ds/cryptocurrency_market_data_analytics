@@ -36,7 +36,7 @@ Por último, asegúrate de destacar el impacto y las recomendaciones basadas en 
 
 ---
 
-#### Acotación: Todo lo explicado en las siguientes líneas se puede ver mas completo y de forma interactiva en el [deploy](dufbasnfkjnasnfsanfnlkñsanflkñnakñsjnfkñjsanfksñjnasn).
+#### Acotación: Todo lo explicado en las siguientes líneas se puede ver mas completo y de forma interactiva en el [Deploy](https://henryproyectoindividual2git-zgnrbdpyjfvxzftua3ohnx.streamlit.app/).
 
 ## **EDA (Exploratory Data Analysis)**
 
@@ -57,7 +57,7 @@ En el [notebook análisis de cripto](https://github.com/cristian-torres-ds/henry
 
 3. Relative Strength Index: Es un indicador técnico utilizado para evaluar la velocidad y el cambio de los movimientos de los precios.
 
-En el notebook solo está anilizada una moneda, en el [Deploy](jkdsakgbkjsdñkg) se puede interactuar y ver las KPIs de todas las monedas en tiempo real, así como también hay una explicación detallada complementaria de cada uno de los KPIs.
+En el notebook solo está anilizada una moneda, en el [Deploy](https://henryproyectoindividual2git-zgnrbdpyjfvxzftua3ohnx.streamlit.app/) se puede interactuar y ver las KPIs de todas las monedas en tiempo real, así como también hay una explicación detallada complementaria de cada uno de los KPIs.
 
 
 ## **Conclusión Personal**

@@ -11,6 +11,14 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 cg = CoinGeckoAPI()
 
+st.markdown("# Análisis de Criptomonedas")
+
+st.markdown("""Para analizar estas monedas vamos a utilizar las siguientes KPIs junto a un diagrama de velas:
+1. Moving Averages.
+2. Average True Range
+3. Relative Strength Index
+""")
+
 # Obtenemos las listas de las mejor capitalizadas
 privacy_data_by_m_cap = pd.DataFrame(cg.get_coins_markets(vs_currency = 'usd', category = 'privacy-coins')).sort_values('market_cap', ascending=False)
 privacy_data_by_m_cap = privacy_data_by_m_cap[['id', 'name', 'current_price', 'market_cap', 'circulating_supply']]
