@@ -29,8 +29,6 @@ id_tuple = tuple(privacy_id_list + payment_id_list)
 # selección de moneda
 moneda = st.selectbox('Moneda: ', id_tuple)
 dias = st.selectbox("Rango de días: ", ('180', '365'))
-indicador = st.selectbox("Indicador: ", ('Moving Averages', 'Average True Range', 'Relative Strength Index'))
-
 
 # Preparado del data frame según moneda elegida
 # La granularidad es de 4 días para la versión gratuita de la API CoinGecko
@@ -40,15 +38,15 @@ ohlc_data_frame['Date'] = ohlc_data_frame['Date'].apply(lambda x: dt.datetime.fr
 ohlc_data_frame['Date'] = pd.to_datetime(ohlc_data_frame['Date'])
 ohlc_data_frame = ohlc_data_frame.set_index('Date')
 
-if indicador == 'Moving Averages':
 
-    st.markdown("""## Moving Averages:
+
+st.markdown("""## Moving Averages:
 Las Moving Averages son una herramienta fundamental en el análisis técnico de los mercados financieros. Son utilizadas para suavizar las fluctuaciones
 de los precios de los activos y ayudar a identificar tendencias.
 """)
 
-    if st.checkbox('Mas info'):
-        st.markdown("""Una media móvil se calcula tomando el promedio de un conjunto de precios durante un período de tiempo específico. A medida que
+if st.checkbox('Mas info', key='1'):
+    st.markdown("""Una media móvil se calcula tomando el promedio de un conjunto de precios durante un período de tiempo específico. A medida que
 el tiempo avanza, la media "se mueve" al incluir nuevos precios y eliminar los más antiguos. Esto permite obtener una perspectiva más clara y suave 
 de la evolución de los precios, lo que puede facilitar la identificación de patrones y tendencias.
 
@@ -68,31 +66,29 @@ de entrada o salida en una posición.
 proporcionar una visión más clara de la tendencia.
 """)
 
-    periodo = st.selectbox("Período: ", ('4', '8', '12'))
+periodo = st.selectbox("Período: ", ('4', '8', '12'))
 
-    fig = mpf.plot(
-            ohlc_data_frame,
-            type='candle',
-            mav=int(periodo),
-            style='charles',
-            title=f'{moneda.upper()} con MA',
-            ylabel='Precio USD',
-            )
+fig = mpf.plot(
+        ohlc_data_frame,
+        type='candle',
+        mav=int(periodo),
+        style='charles',
+        title=f'{moneda.upper()} con MA',
+        ylabel='Precio USD',
+        )
 
-    st.pyplot(fig)
+st.pyplot(fig)
 
+st.markdown('---')
 
-
-elif indicador == 'Average True Range':
-
-    st.markdown("""## Average True Range:
+st.markdown("""## Average True Range:
 El ATR se utiliza principalmente para medir la volatilidad del precio de un activo financiero en un período de tiempo determinado. A diferencia de otros indicadores
 que solo se basan en cambios de precios, el ATR también tiene en cuenta las brechas o gaps en los precios, lo que lo hace un indicador más completo para evaluar la
 volatilidad real del mercado.
 """)
 
-    if st.checkbox('Mas info'):
-        st.markdown("""El cálculo del ATR implica varios pasos:
+if st.checkbox('Mas info', key='2'):
+    st.markdown("""El cálculo del ATR implica varios pasos:
 
 1. Calcula el rango verdadero (TR) para cada día:
    - TR = Max(Alta - Baja, |Alta - Cierre_previo|, |Baja - Cierre_previo|)
@@ -112,46 +108,46 @@ El ATR se expresa en la misma unidad que el precio del activo y se utiliza princ
 4. **Comparar la volatilidad entre activos**: El ATR permite comparar la volatilidad entre diferentes activos, lo que puede ser útil al decidir en qué activos invertir.
 """)
 
-    # Agregado de comlumna ATR
-    def wwma(values, n):
-        return values.ewm(alpha=1/n, adjust=False).mean()
+# Agregado de comlumna ATR
+def wwma(values, n):
+    return values.ewm(alpha=1/n, adjust=False).mean()
 
-    def atr(df, n=14):
-        data = df.copy()
-        high = data['High']
-        low = data['Low']
-        close = data['Close']
-        data['tr0'] = abs(high - low)
-        data['tr1'] = abs(high - close.shift())
-        data['tr2'] = abs(low - close.shift())
-        tr = data[['tr0', 'tr1', 'tr2']].max(axis=1)
-        atr = wwma(tr, n)
-        return atr
+def atr(df, n=14):
+    data = df.copy()
+    high = data['High']
+    low = data['Low']
+    close = data['Close']
+    data['tr0'] = abs(high - low)
+    data['tr1'] = abs(high - close.shift())
+    data['tr2'] = abs(low - close.shift())
+    tr = data[['tr0', 'tr1', 'tr2']].max(axis=1)
+    atr = wwma(tr, n)
+    return atr
 
-    ohlc_data_frame['ATR'] = atr(ohlc_data_frame)
+ohlc_data_frame['ATR'] = atr(ohlc_data_frame)
 
-    atr = mpf.make_addplot(ohlc_data_frame["ATR"])
+atr = mpf.make_addplot(ohlc_data_frame["ATR"])
 
-    fig = mpf.plot(
-                ohlc_data_frame,
-                type='candle',
-                figratio=(18,10),
-                addplot = atr,
-                style='charles',
-                title=f"{moneda.upper()} con ATR",
-                ylabel='Precio USD',
-                )
+fig = mpf.plot(
+            ohlc_data_frame,
+            type='candle',
+            figratio=(18,10),
+            addplot = atr,
+            style='charles',
+            title=f"{moneda.upper()} con ATR",
+            ylabel='Precio USD',
+            )
 
-    st.pyplot(fig)
+st.pyplot(fig)
 
+st.markdown('---')
 
-else:
-    st.markdown("""## Relative Strength Index:
+st.markdown("""## Relative Strength Index:
 Es un indicador técnico utilizado para evaluar la velocidad y el cambio de los movimientos de los precios.
 """)
 
-    if st.checkbox('Mas info'):
-        st.markdown("""Fue desarrollado por J. Welles Wilder en la década de 1970 y se considera uno de los indicadores más populares y efectivos.
+if st.checkbox('Mas info', key='3'):
+    st.markdown("""Fue desarrollado por J. Welles Wilder en la década de 1970 y se considera uno de los indicadores más populares y efectivos.
 
 El RSI es un oscilador que oscila entre 0 y 100 y se calcula utilizando la siguiente fórmula básica:
 
@@ -185,36 +181,36 @@ consideraciones. Además, el RSI puede dar señales falsas en mercados especialm
 y utilizar múltiples indicadores y enfoques antes de tomar decisiones comerciales basadas en el RSI.
 """)
 
-    # Agregado de RSI
-    ohlc_data_frame['change'] = ohlc_data_frame['Close'].diff()
-    ohlc_data_frame['gain'] = ohlc_data_frame.change.mask(ohlc_data_frame.change < 0, 0.0)
-    ohlc_data_frame['loss'] = -ohlc_data_frame.change.mask(ohlc_data_frame.change > 0, -0.0)
+# Agregado de RSI
+ohlc_data_frame['change'] = ohlc_data_frame['Close'].diff()
+ohlc_data_frame['gain'] = ohlc_data_frame.change.mask(ohlc_data_frame.change < 0, 0.0)
+ohlc_data_frame['loss'] = -ohlc_data_frame.change.mask(ohlc_data_frame.change > 0, -0.0)
 
-    def rma(x, n):
-        """Running moving average"""
-        a = np.full_like(x, np.nan)
-        a[n] = x[1:n+1].mean()
-        for i in range(n+1, len(x)):
-            a[i] = (a[i-1] * (n - 1) + x[i]) / n
-        return a
+def rma(x, n):
+    """Running moving average"""
+    a = np.full_like(x, np.nan)
+    a[n] = x[1:n+1].mean()
+    for i in range(n+1, len(x)):
+        a[i] = (a[i-1] * (n - 1) + x[i]) / n
+    return a
 
-    ohlc_data_frame['avg_gain'] = rma(ohlc_data_frame.gain.to_numpy(), 14)
-    ohlc_data_frame['avg_loss'] = rma(ohlc_data_frame.loss.to_numpy(), 14)
+ohlc_data_frame['avg_gain'] = rma(ohlc_data_frame.gain.to_numpy(), 14)
+ohlc_data_frame['avg_loss'] = rma(ohlc_data_frame.loss.to_numpy(), 14)
 
-    ohlc_data_frame['rs'] = ohlc_data_frame.avg_gain / ohlc_data_frame.avg_loss
-    ohlc_data_frame['RSI'] = 100 - (100 / (1 + ohlc_data_frame.rs))
-    ohlc_data_frame = ohlc_data_frame.drop(['change', 'gain', 'loss', 'avg_gain', 'avg_loss', 'rs'], axis=1)
+ohlc_data_frame['rs'] = ohlc_data_frame.avg_gain / ohlc_data_frame.avg_loss
+ohlc_data_frame['RSI'] = 100 - (100 / (1 + ohlc_data_frame.rs))
+ohlc_data_frame = ohlc_data_frame.drop(['change', 'gain', 'loss', 'avg_gain', 'avg_loss', 'rs'], axis=1)
 
-    rsi = mpf.make_addplot(ohlc_data_frame["RSI"])
+rsi = mpf.make_addplot(ohlc_data_frame["RSI"])
 
-    fig = mpf.plot(
-                ohlc_data_frame,
-                type='candle',
-                figratio=(18,10),
-                addplot = rsi,
-                style='charles',
-                title=f"{moneda.upper()} con RSI",
-                ylabel='Precio USD',
-                )
+fig = mpf.plot(
+            ohlc_data_frame,
+            type='candle',
+            figratio=(18,10),
+            addplot = rsi,
+            style='charles',
+            title=f"{moneda.upper()} con RSI",
+            ylabel='Precio USD',
+            )
 
-    st.pyplot(fig)
+st.pyplot(fig)
